@@ -43,17 +43,21 @@ if args.script == 'public':
         print("##Automatic Mode Selected##")
         os.system("sudo service tor stop")
         os.system("sudo service tor start")
+        c = 0
         while True:
             os.system("sudo service tor reload")
-            print("##reset complete##")
+            c += 1
+            print("##reset", c, "complete##")
             sleep(30)
     elif args.mode == 'manual':
         print("##Manual Mode Selected##")
         os.system("sudo service tor stop")
         os.system("sudo service tor start")
+        c = 0
         while True:
             os.system("sudo service tor restart")
-            print("##reset complete##")
+            c += 1
+            print("##reset", c, "complete##")
             sleep(args.time)
 if args.script == 'local':
     if args.mode == 'auto':
