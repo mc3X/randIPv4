@@ -7,4 +7,5 @@ if os.getuid() != 0:
     exit("You need root")
 
 os.system("sudo cp randIPv2 /usr/bin/")
+os.system("sudo cp proxychains4.conf /etc/")
 print("Installation complete")
