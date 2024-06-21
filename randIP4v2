@@ -1,0 +1,92 @@
+#!/usr/bin/python
+
+import os
+import random
+import argparse
+import subprocess
+from time import sleep
+
+print('''\033[1;32;40m \n
+
+                                __  _   ______
+                               / / | | |      |
+ _____                        / /  | | |  °°  |
+ | ___| /-----    ____    ___/ /   | | |  ___ /
+ | |   / |-| |   /  _ \  |     |   | | | |
+ | |   | |_| |_  | | | | | |_| |   | | | |
+ |_|   |_____|_| |_| | | |_____|   |_| |_|
+
+from mc3X
+
+''')
+
+if os.getuid() != 0:
+    exit("You need root")
+
+ip = ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
+
+def change_ip_address(interface, new_ip):
+    subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
+    subprocess.run(['sudo', 'ifconfig', interface, new_ip], check=True)
+    subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
+    print(f"IP-Adresse der Schnittstelle {interface} erfolgreich auf {new_ip} geändert.")
+
+parser = argparse.ArgumentParser(description="This script is for the local and Public IP")
+parser.add_argument("-s", "--script", type=str, help="Select public or local")
+parser.add_argument("-m", "--mode", type=str, help="Select auto or manual")
+parser.add_argument("-n", "--nic", type=str, help="Select NIC (wlan0, eth0, etc.)")
+parser.add_argument("-t", "--time", type=int, help="Enter time for script (local)")
+args = parser.parse_args()
+
+if args.script == 'public':
+    z = 0
+    try:
+        if args.mode == 'auto':
+            print("##Automatic Mode Selected##")
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+            while True:
+                z += 1
+                os.system("sudo service tor reload")
+                print("##RESET", z, "COMPLETE##")
+                sleep(30)
+        elif args.mode == 'manual':
+            print("##Manual Mode Selected##")
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+            while True:
+                z += 1
+                os.system("sudo service tor restart")
+                print("##RESET", z, "COMPLETE##")
+                sleep(args.time)
+    except KeyboardInterrupt:
+        print("")
+        os.system("sudo service tor stop")
+        exit("You stopped the script")
+if args.script == 'local':
+    z = 0
+    if args.mode == 'auto':
+        print("Automatic Mode Started!")
+        print("")
+        try:
+            while True:
+                z += 1
+                print("RESET", z, "COMPLETE")
+                change_ip_address(args.nic, ip)
+                sleep(120)
+        except KeyboardInterrupt:
+            print("")
+            exit("You stopped the script")
+
+    elif args.mode == 'manual':
+        z = 0
+        print("Manual Mode Started!")
+        while True:
+            z += 1
+            try:
+                print("RESET", z, "COMPLETE")
+                change_ip_address(args.nic, ip)
+                sleep(args.time)
+            except KeyboardInterrupt:
+                print("")
+                exit("You stopped the script")
