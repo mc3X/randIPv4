@@ -29,7 +29,7 @@ def change_ip_address(interface, new_ip):
     subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
     subprocess.run(['sudo', 'ifconfig', interface, new_ip], check=True)
     subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
-    print(f"IP-Adresse der Schnittstelle {interface} erfolgreich auf {new_ip} geändert.")
+    print(f"IP-Address of NIC {interface} successfully changed to {new_ip}")
 
 parser = argparse.ArgumentParser(description="This script is for the local and Public IP")
 parser.add_argument("-s", "--script", type=str, help="Select public or local")
