@@ -1,4 +1,4 @@
-randIPv2 change your IP in secend interval.
+##randIPv2 changes your IP every second##
 
 #Installation
 
