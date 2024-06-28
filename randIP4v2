@@ -20,9 +20,6 @@ from mc3X
 
 ''')
 
-if os.getuid() != 0:
-    exit("You need root")
-
 ip = ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
 
 def change_ip_address(interface, new_ip):
@@ -37,6 +34,9 @@ parser.add_argument("-m", "--mode", type=str, help="Select auto or manual")
 parser.add_argument("-n", "--nic", type=str, help="Select NIC (wlan0, eth0, etc.)")
 parser.add_argument("-t", "--time", type=int, help="Enter time for script (local)")
 args = parser.parse_args()
+
+if os.getuid() != 0:
+    exit("You need root")
 
 if args.script == 'public':
     z = 0
