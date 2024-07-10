@@ -7,6 +7,7 @@ if os.getuid() != 0:
     exit("You need root")
 
 os.system("sudo apt install tor proxychains4 -y")
+os.system("sudo chmod +x randIP4v2")
 os.system("sudo cp randIP4v2 /usr/bin/")
 os.system("sudo cp proxychains4.conf /etc/")
 print("Installation complete")
