@@ -1,4 +1,4 @@
-##randIPv2 changes your IPv4 address in seconds defined by you##
+##randIPv4 changes your IPv4 address in seconds defined by you##
 
 #Installation
 
