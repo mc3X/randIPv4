@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 
@@ -6,8 +6,20 @@ print("Installation started")
 if os.getuid() != 0:
     exit("You need root")
 
-os.system("sudo apt install tor proxychains4 -y")
-os.system("sudo chmod +x randIP4v2")
-os.system("sudo cp randIP4v2 /usr/bin/")
-os.system("sudo cp proxychains4.conf /etc/")
-print("Installation complete")
+yn = input("Enter offline for a offline installation or press online for a installation with apt:\n")
+
+if yn == 'online':
+    print("Online installation started!")
+    os.system("sudo apt install tor proxychains4 -y")
+    os.system("sudo chmod +x randIP4v2")
+    os.system("sudo cp randIP4v2 /usr/bin/")
+    os.system("sudo cp proxychains4.conf /etc/")
+    print("Installation complete")
+elif yn == 'offline':
+    print("Offline installation started!")
+    os.system("sudo dpkg -i proxychains_3.1-6_all.deb")
+    os.system("sudo dpkg -i tor_0.3.2.10-1_amd64.deb")
+    os.system("sudo chmod +x randIP4v2")
+    os.system("sudo cp randIP4v2 /usr/bin/")
+    os.system("sudo cp proxychains4.conf /etc/")
+    print("Installation complete")
