@@ -1,0 +1,146 @@
+#!/usr/bin/python3
+
+import argparse
+import os
+from colorama import Fore, Style, Back
+import random
+import subprocess
+from time import sleep
+
+print(Fore.GREEN + Style.BRIGHT + '''
+                     _ ___ ____        _  _   
+ _ __ __ _ _ __   __| |_ _|  _ \__   _| || |  
+| '__/ _` | '_ \ / _` || || |_) \ \ / / || |_ 
+| | | (_| | | | | (_| || ||  __/ \ V /|__   _|
+|_|  \__,_|_| |_|\__,_|___|_|     \_/    |_|  
+''' + Style.RESET_ALL)
+print(Fore.CYAN + Style.BRIGHT + "from mc3X" + Style.RESET_ALL)
+
+ip = ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
+
+def change_ip_address_eth(interface, new_ip):
+    subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
+    subprocess.run(['sudo', 'ifconfig', interface, new_ip], check=True)
+    subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
+    print(f"IP-Adresse der Schnittstelle {interface} erfolgreich auf {new_ip} geändert.")
+
+def change_ip_address_wlan(interface, new_ip):
+    subprocess.run(['sudo', 'ifconfig', interface, new_ip], check=True)
+    print(f"IP-Adresse der Schnittstelle {interface} erfolgreich auf {new_ip} geändert.")
+
+parser = argparse.ArgumentParser(description="This script is for the local and Public IP")
+parser.add_argument("-c", "--connect", type=str, help="Select public or local")
+parser.add_argument("-s", "--script", type=str, help="Select auto or manual")
+parser.add_argument("-i", "--interface", type=str, help="Enter wlan or ethernet")
+parser.add_argument("-n", "--nic", type=str, help="Select NIC (wlan0, eth0, etc.)")
+parser.add_argument("-m", "--mac", type=str, help="Select if you want to change your mac-address (default no to activate type yes)")
+parser.add_argument("-t", "--time", type=int, help="Enter time for script (local)")
+args = parser.parse_args()
+
+z = 0
+
+if os.getuid() != 0:
+    exit(Fore.RED + Style.BRIGHT + "You need root!" + Style.RESET_ALL)
+
+try:
+    if args.connect == 'public':
+        if args.script == 'auto':
+            print(Fore.GREEN + Style.BRIGHT + "##Automatic Mode Selected##" + Style.RESET_ALL)
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+            if args.mac == 'yes':
+                while True:
+                    z += 1
+                    os.system("sudo service tor reload")
+                    os.system("sudo macchanger -r")
+                    print("##RESET", z, "COMPLETE##")
+                    sleep(30)
+            else:
+                while True:
+                    z += 1
+                    os.system("sudo service tor reload")
+                    print("##RESET", z, "COMPLETE##")
+                    sleep(30)
+        elif args.script == 'manual':
+            print(Fore.GREEN + Style.BRIGHT + "##Manual Mode Selected##" + Style.RESET_ALL)
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+            if args.mac == 'yes':
+                while True:
+                    z += 1
+                    os.system("sudo service tor restart")
+                    os.system("sudo macchanger -r")
+                    print("##RESET", z, "COMPLETE##")
+                    sleep(args.time)
+            else:
+                while True:
+                    z += 1
+                    os.system("sudo service tor restart")
+                    print("##RESET", z, "COMPLETE##")
+                    sleep(args.time)
+
+    elif args.connect == 'local':
+        if args.script == 'auto':
+            print(Fore.GREEN + Style.BRIGHT + "##Automatic Mode Started##" + Style.RESET_ALL)
+            if args.interface == 'eth':
+                if args.mac == 'yes':
+                    while True:
+                        z += 1
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_eth(args.nic, ip)
+                        os.system("sudo macchanger -r")
+                        sleep(120)
+                else:
+                    while True:
+                        z += 1
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_eth(args.nic, ip)
+                        sleep(120)
+            elif args.interface == 'wlan':
+                if args.mac == 'yes':
+                    while True:
+                        z += 1
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_wlan(args.nic, ip)
+                        os.system("sudo macchanger -r")
+                        sleep(120)
+                else:
+                    while True:
+                        z += 1
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_wlan(args.nic, ip)
+                        sleep(120)
+        elif args.script == 'manual':
+            print(Fore.GREEN + Style.BRIGHT + "##Manual Mode Started##" + Style.RESET_ALL)
+            if args.interface == 'eth':
+                if args.mac == 'yes':
+                    while True:
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_eth(args.nic, ip)
+                        os.system("sudo macchanger -r")
+                        sleep(args.time)
+                        z += 1
+                else:
+                    while True:
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_eth(args.nic, ip)
+                        sleep(args.time)
+                        z += 1
+            elif args.interface == 'wlan':
+                if args.mac == 'yes':
+                    while True:
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_wlan(args.nic, ip)
+                        os.system("sudo macchanger -r")
+                        z += 1
+                        sleep(args.time)
+                else:
+                    while True:
+                        print("RESET", z, "COMPLETE")
+                        change_ip_address_wlan(args.nic, ip)
+                        z += 1
+                        sleep(args.time)
+except KeyboardInterrupt:
+    os.system("sudo service tor stop")
+    print("")
+    exit(Fore.RED + Style.BRIGHT + "You stopped the script!" + Style.RESET_ALL)
