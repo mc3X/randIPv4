@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-import colorama
-from colorama import Fore
-from colorama import Style
+from colorama import Fore, Style
 import os
 
 print(Fore.GREEN + Style.BRIGHT + "Installation started" + Style.RESET_ALL)
