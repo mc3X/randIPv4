@@ -1,0 +1,6 @@
+argparse
+colorama
+os
+random
+subprocess
+time
