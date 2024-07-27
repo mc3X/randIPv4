@@ -39,7 +39,7 @@ parser.add_argument("-s", "--script", type=str, help="Select auto or manual")
 parser.add_argument("-i", "--interface", type=str, help="Enter wlan or ethernet")
 parser.add_argument("-n", "--nic", type=str, help="Select NIC (wlan0, eth0, etc.)")
 parser.add_argument("-m", "--mac", type=str, help="Select if you want to change your mac-address (default deaktivated, to activate type yes and use -n)")
-parser.add_argument("-t", "--time", type=int, help="Enter time for script (local)")
+parser.add_argument("-t", "--time", type=int, help="Enter time for script")
 args = parser.parse_args()
 
 z = 0
