@@ -43,4 +43,4 @@ elif yn == 'offline':
     os.system("sudo chmod +x randIPv4")
     os.system("sudo cp randIPv4 /usr/bin/")
     os.system("sudo cp proxychains4.conf /etc/")
-    print(Fore.RED + Style.BRIGHT + "Installation complete" + Style.RESET.ALL)
+    print(Fore.RED + Style.BRIGHT + "Installation complete" + Style.RESET_ALL)
