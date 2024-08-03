@@ -17,6 +17,18 @@ if yn == 'online':
 elif yn == 'offline':
     print(Fore.GREEN + Style.BRIGHT + "Offline installation started!" + Style.RESET_ALL)
     try:
+        os.system("sudo dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb")
+    except:
+        print(Fore.RED + Style.BRIGHT + "Failed to install libssl" + Style_RESET_ALL)
+    try:
+        os.system("sudo dpkg -i libproxychains3_3.1-7_amd64.deb")
+    except:
+        print(Fore.RED + Style.BRIGHT + "libproxychains" + Style_RESET_ALL)
+    try:
+        os.system("sudo dpkg -i libevent-2.1-6_2.1.8-stable-4build1_amd64.deb")
+    except:
+        print(Fore.RED + Style.BRIGHT + "libevent" + Style_RESET_ALL)
+    try:
         os.system("sudo dpkg -i proxychains_3.1-6_all.deb")
     except:
         print(Fore.RED + Style.BRIGHT + "Failed to Install proxychains4" + Style.RESET_ALL)
