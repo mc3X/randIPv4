@@ -10,8 +10,8 @@ yn = input("Enter offline for a offline installation or press online for a insta
 if yn == 'online':
     print(Fore.GREEN + Style.BRIGHT + "Online installation started!" + Style.RESET_ALL)
     os.system("sudo apt install tor proxychains4 -y")
-    os.system("sudo chmod +x randIP4v2")
-    os.system("sudo cp randIP4v2 /usr/bin/")
+    os.system("sudo chmod +x randIPv4")
+    os.system("sudo cp randIPv4 /usr/bin/")
     os.system("sudo cp proxychains4.conf /etc/")
     print("Installation complete")
 elif yn == 'offline':
@@ -28,7 +28,7 @@ elif yn == 'offline':
         os.system("sudo dpkg -i macchanger_1.7.0-5.3build1_amd64.deb")
     except:
         print(Fore.RED + Style.BRIGHT + "Failed to Install macchanger" + Style.RESET_ALL)
-    os.system("sudo chmod +x randIP4v2")
-    os.system("sudo cp randIP4v2 /usr/bin/")
+    os.system("sudo chmod +x randIPv4")
+    os.system("sudo cp randIPv4 /usr/bin/")
     os.system("sudo cp proxychains4.conf /etc/")
     print(Fore.RED + Style.BRIGHT + "Installation complete" + Style.RESET.ALL)
