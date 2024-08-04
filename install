@@ -9,6 +9,7 @@ yn = input("Enter offline for a offline installation or press online for a insta
 
 if yn == 'online':
     print(Fore.GREEN + Style.BRIGHT + "Online installation started!" + Style.RESET_ALL)
+    os.system("pip install -r requirements.txt")
     os.system("sudo apt install tor proxychains4 -y")
     os.system("sudo chmod +x randIPv4")
     os.system("sudo cp randIPv4 /usr/bin/")
