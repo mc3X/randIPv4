@@ -21,7 +21,6 @@ parser = argparse.ArgumentParser(description="This script is for the local and P
 parser.add_argument("-c", "--connect", type=str, default=None, help="Select public or local")
 parser.add_argument("-m", "--mode", type=str, default=None, help="Select auto or manuel")
 parser.add_argument("-n", "--nic", type=str, default=None, help="Select NIC (wlan0, eth0, etc.)")
-parser.add_argument("-mc", "--mac", action='store_true')
 parser.add_argument("-t", "--time", type=int, default=None, help="Enter time for script (mode=manual)")
 args = parser.parse_args()
 
@@ -29,12 +28,9 @@ def check_your_subnet():
     os.system("ip -o -4 addr show dev " + args.nic + " | awk '{print $4}' | cut -d/ -f2 > .sn.txt")
 
 def change_mac(interface):
-    if args.mac == True:
-        subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
-        subprocess.run(['sudo', 'macchanger', '-r', interface], check=True)
-        subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
-    else:
-        pass
+    subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
+    subprocess.run(['sudo', 'macchanger', '-r', interface], check=True)
+    subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
 
 def check_and_change(interface):
     ip = ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
@@ -67,7 +63,6 @@ try:
             while True:
                 z += 1
                 os.system("sudo service tor reload")
-                change_mac(args.nic)
                 print(Fore.GREEN + Style.BRIGHT + f"##RESET {z} COMPLETE##", Fore.RED + "  Time of Last change: ", time.ctime(), "|  Time to restart: ", args.time, end="\r" + Style.RESET_ALL)
                 time.sleep(30)
         elif args.mode == 'manuel':
@@ -79,7 +74,6 @@ try:
             while True:
                 z += 1
                 os.system("sudo service tor restart")
-                change_mac(args.nic)
                 print(Fore.GREEN + Style.BRIGHT + f"##RESET {z} COMPLETE##", Fore.RED + "  Time of Last change: ", time.ctime(), "|  Time to restart: ", args.time, end="\r" + Style.RESET_ALL)
                 time.sleep(args.time)
     elif args.connect == 'local':
@@ -102,12 +96,16 @@ try:
                 time.sleep(args.time)
                 z += 1    
 except KeyboardInterrupt:
-    try:
+    if args.connect == 'public':
+        os.system("sudo service tor stop")
+        print("")
+        exit(Fore.RED + Style.BRIGHT + "You stopped the script!" + Style.RESET_ALL)
+    elif args.connect == 'local':
+        subprocess.run(["sudo macchanger -p", args.nic], check=True)
+        print("")
+        exit(Fore.RED + Style.BRIGHT, "You stopped the script!" + Style.RESET_ALL)
+    elif args.connect == 'local' and args.connect == 'public':
         os.system("sudo service tor stop")
         subprocess.run(["sudo macchanger -p", args.nic], check=True)
         print("")
         exit(Fore.RED + Style.BRIGHT, "You stopped the script!" + Style.RESET_ALL)
-    except:
-        os.system("sudo service tor stop")
-        print("")
-        exit(Fore.RED + Style.BRIGHT + "You stopped the script!" + Style.RESET_ALL)
