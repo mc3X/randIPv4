@@ -5,4 +5,4 @@
 sudo python3 install
 
 
-Usage: For help type sudo randIPv2 --help
+Usage: For help type: "sudo randIPv2 --help"
