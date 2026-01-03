@@ -35,6 +35,26 @@ if args.connect == 'local':
         lw += 1
     elif ii == 'n':
         le += 1
+
+#saving the wifi password in a var.
+def wifi_pw():
+    global psk = None
+
+    if lw == 1:
+        os.system("sudo ls /etc/NetworkManager/system-connections/")
+        global wip = input("Enter the full name of the WiFi:").strip()
+    
+        try:
+            psk_line = os.popen(
+                f"sudo grep psk= /etc/NetworkManager/system-connections/{wip}" 
+                ).read().strip() 
+            if psk_line.startswith("psk="):
+                psk = psk_line[4:]
+                print(f"Password of the network {wip}: {psk}")
+            else:
+                print(Fore.RED + "Could not read PSK!" + Style.RESET_ALL)
+        except Exception as e:
+            print(Fore.RED + f"Error reading WiFi password: {e}" + Style.RESET_ALL)
     
 def check_your_subnet():
     os.system("ip -o -4 addr show dev " + args.nic + " | awk '{print $4}' | cut -d/ -f2 > .sn.txt")
@@ -58,9 +78,9 @@ def check_and_change(interface):
     elif response != 0:
         #Wifi
         if lw == 1:
-            net = input("Please type the Name of your Network:")
+            wifi_pw()
             os.system(f"sudo ifconfig {args.nic} up")
-            subprocess.run(['sudo', 'ifconfig', args.nic, 'essid', net, psk[4:]])
+            subprocess.run(['sudo', 'ifconfig', args.nic, wip, '255.255.255.0', psk[4:]])
             os.system(f"sudo dhclient {args.nic}")
             subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
             subprocess.run(['sudo', 'ifconfig', interface, ip], check=True)
