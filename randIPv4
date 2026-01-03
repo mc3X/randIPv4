@@ -35,13 +35,6 @@ if args.connect == 'local':
         lw += 1
     elif ii == 'n':
         le += 1
-
-#saving the wifi password in a var.
-if lw == 1:
-    os.system("sudo ls /etc/NetworkManager/system-connections/")
-    wip = str(input("Enter the full name of the wifi connection:"))
-    psk = os.popen(f"sudo grep psk= /etc/NetworkManager/system-connections/{wip}").read()
-    print(f"Password of the Network {wip} is {psk[4:]}")
     
 def check_your_subnet():
     os.system("ip -o -4 addr show dev " + args.nic + " | awk '{print $4}' | cut -d/ -f2 > .sn.txt")
