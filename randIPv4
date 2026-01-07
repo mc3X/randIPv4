@@ -95,6 +95,7 @@ def check_and_change(interface):
 
 try:
     if args.connect == 'public':
+        os.system("export socks_proxy="socks://127.0.0.1:9050")
         if args.mode == 'auto':
             print(Fore.GREEN + Style.BRIGHT + "##Automatic Mode Selected##" + Style.RESET_ALL)
             os.system("sudo service tor stop")
@@ -107,6 +108,7 @@ try:
                 print(Fore.GREEN + Style.BRIGHT + f"##RESET {z} COMPLETE##", Fore.RED + "  Time of Last change: ", time.ctime(), "|  Time to restart: ", args.time, end="\r" + Style.RESET_ALL)
                 time.sleep(30)
         elif args.mode == 'manuel':
+            os.system("export socks_proxy="socks://127.0.0.1:9050")
             print(Fore.GREEN + Style.BRIGHT + "##Manual Mode Selected##" + Style.RESET_ALL)
             os.system("sudo service tor stop")
             os.system("sudo service tor start")
@@ -139,6 +141,7 @@ try:
 
 except KeyboardInterrupt:
     if args.connect == 'public':
+        os.system("export -n socks_proxy")
         os.system("sudo service tor stop")
         print("")
         exit(Fore.RED + Style.BRIGHT + "You stopped the script!" + Style.RESET_ALL)
@@ -147,6 +150,7 @@ except KeyboardInterrupt:
         print("")
         exit(Fore.RED + Style.BRIGHT, "You stopped the script!" + Style.RESET_ALL)
     elif args.connect == 'local' and args.connect == 'public':
+        os.system("export -n socks_proxy")
         os.system("sudo service tor stop")
         subprocess.run(["sudo macchanger -p", args.nic], check=True)
         print("")
