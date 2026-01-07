@@ -76,25 +76,27 @@ def check_and_change(interface):
                 break
     #IP is down and can by used
     elif response != 0:
+        csnm = random.randint(1, 32)
         #Wifi
         if lw == 1:
             wifi_pw()
             os.system(f"sudo ifconfig {args.nic} up")
-            subprocess.run(['sudo', 'ifconfig', args.nic, wip, random.randint(1, 32), psk[4:]])
+            subprocess.run(['sudo', 'ifconfig', args.nic, wip, csnm, psk[4:]])
             os.system(f"sudo dhclient {args.nic}")
             subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
             subprocess.run(['sudo', 'ifconfig', interface, ip], check=True)
             subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
-            print(Fore.GREEN + f"IP-Address of NIC {interface} successful changed to {ip}" + Style.RESET_ALL, end="\n")
+            print(Fore.GREEN + f"IP-Address of NIC {interface} successful changed to {ip}/{csnm}" + Style.RESET_ALL, end="\n")
         #Ethernet
         elif le == 1:
             subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
-            subprocess.run(['sudo', 'ifconfig', interface, ip], check=True)
+            subprocess.run(['sudo', 'ifconfig', interface, ip, csnm], check=True)
             subprocess.run(['sudo', 'ifconfig', interface, 'up'], check=True)
-            print(Fore.GREEN + f"IP-Address of NIC {interface} successful changed to {ip}" + Style.RESET_ALL, end="\n")
+            print(Fore.GREEN + f"IP-Address of NIC {interface} successful changed to {ip}/{csnm}" + Style.RESET_ALL, end="\n")
 
 try:
     if args.connect == 'public':
+        change_mac(args.nic)
         os.system("export socks_proxy="socks://127.0.0.1:9050")
         if args.mode == 'auto':
             print(Fore.GREEN + Style.BRIGHT + "##Automatic Mode Selected##" + Style.RESET_ALL)
@@ -108,6 +110,7 @@ try:
                 print(Fore.GREEN + Style.BRIGHT + f"##RESET {z} COMPLETE##", Fore.RED + "  Time of Last change: ", time.ctime(), "|  Time to restart: ", args.time, end="\r" + Style.RESET_ALL)
                 time.sleep(30)
         elif args.mode == 'manuel':
+            change_mac(args.nic)
             os.system("export socks_proxy="socks://127.0.0.1:9050")
             print(Fore.GREEN + Style.BRIGHT + "##Manual Mode Selected##" + Style.RESET_ALL)
             os.system("sudo service tor stop")
