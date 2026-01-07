@@ -80,7 +80,7 @@ def check_and_change(interface):
         if lw == 1:
             wifi_pw()
             os.system(f"sudo ifconfig {args.nic} up")
-            subprocess.run(['sudo', 'ifconfig', args.nic, wip, '255.255.255.0', psk[4:]])
+            subprocess.run(['sudo', 'ifconfig', args.nic, wip, random.randint(1, 32), psk[4:]])
             os.system(f"sudo dhclient {args.nic}")
             subprocess.run(['sudo', 'ifconfig', interface, 'down'], check=True)
             subprocess.run(['sudo', 'ifconfig', interface, ip], check=True)
